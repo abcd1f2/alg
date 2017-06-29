@@ -60,27 +60,19 @@ def main():
     tot_items = list()
 
     tot_item = list()
-    tot_item.append("king")
-    tot_item.append("of")
-    tot_item.append("the")
-    tot_item.append("world")
+    tot_item = ["king","of","the","world"]
     tot_items.append(tot_item)
 
     tot_item = list()
-    tot_item.append("cs")
-    tot_item.append("app")
+    tot_item = ["cs", "app"]
     tot_items.append(tot_item)
 
     tot_item = list()
-    tot_item.append("good")
-    tot_item.append("cool")
-    tot_item.append("dev")
+    tot_item = ["good", "cool", "dev"]
     tot_items.append(tot_item)
 
     tot_item = list()
-    tot_item.append("king")
-    tot_item.append("of")
-    tot_item.append("the")
+    tot_item = ["king", "of", "the"]
     tot_items.append(tot_item)
 
     getNDis(tot_items)
