@@ -35,9 +35,8 @@ def dijkstra(doub_list, vertexs, edges):
         '''
         #将刚纳入的顶点进行计算，围绕顶点计算周围的最近顶点
         for v in xrange(1, vertexs + 1):
-            if doub_list[u][v] < min_value:
-                if dist[v] > dist[u] + doub_list[u][v]:
-                    dist[v] = dist[u] + doub_list[u][v]
+            if doub_list[u][v] < min_value and dist[v] > dist[u] + doub_list[u][v]:
+                dist[v] = dist[u] + doub_list[u][v]
     return dist
 
 if __name__ == "__main__":
