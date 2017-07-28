@@ -34,12 +34,12 @@ def print_lcs(l, i_index, j_index):
         print_lcs(l, i_index, j_index-1)
 
 if __name__ == '__main__':
-    s1 = 'abcbdab'
-    s2 = 'bdcaba'
-    (nums,res) = common_lcs(s1, s2)
+    str1 = 'abcbdab'
+    str2 = 'bdcaba'
+    (nums,res) = common_lcs(str1, str2)
     print nums
-    print_lcs(res, len(s1), len(s2))
+    print_lcs(res, len(str1), len(str2))
     print 'lcs'
-    print_lcs(res, len(s1), len(s2)-1)
+    print_lcs(res, len(str1), len(str2)-1)
     print 'lcs'
-    print_lcs(res, len(s1)-1, len(s2))
+    print_lcs(res, len(str1)-1, len(str2))
