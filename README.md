@@ -1,7 +1,7 @@
 常规的数据结构和算法 Data structures and algorithms:
     dp:
-        coin:
-        bags:
+        coin:min_coin.py done
+        bags:bag_0_1.py done
     astar(A*搜索):
     集束搜索（又名定向搜索，Beam Search）:
     二分查找（Binary Search）:
@@ -35,6 +35,5 @@
     合并查找算法（Union-find）:
     维特比算法（Viterbi algorithm）:
 
-    
+
 机器学习相关笔记 machine learning:
-    
