@@ -1,29 +1,81 @@
 #coding=utf-8
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model.logistic import LogisticRegression
+"""
+参考：
+http://python.jobbole.com/81721/
+http://python.jobbole.com/87994/?utm_source=blog.jobbole.com&utm_medium=relatedPosts
+"""
 
-def logistic_regression():
-    x = list()
-    #用于训练
-    x.append("fuck you")
-    x.append("fuck you all")
-    x.append("hello body")
+import numpy as np
+import urllib
+from sklearn import preprocessing
+from sklearn import metrics
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
 
-    #用于测试
-    x.append("fuck")
-    x.append("hello")
+def LogisticReg():
+    url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data'
+    raw_data = urllib.urlopen(url=url)
+    dataset = np.loadtxt(raw_data, delimiter=',')
+    x = dataset[:,0:7]
+    y = dataset[:,8]
+    #标准化 归一化
+    standardized_x = preprocessing.scale(x)
+    #规则化 它包括数据的预处理，使得每个特征的值有0和1的离差
+    normalized_x = preprocessing.normalize(x)
 
-    y = [1,1,0]
-    ve = TfidfVectorizer()
-    x_train = ve.fit_transform(x[:-2])
-    x_test = ve.transform(x[-2:])
+    #特征工程
+    #对于特征的选取，已经有很多的算法可供直接使用。如树算法就可以计算特征的信息量
+    model = ExtraTreesClassifier()
+    model.fit(x, y)
+    print model.feature_importances_
 
-    lr = LogisticRegression()
-    print lr.fit(x_train, y)
+    #选取好的子集
+    model = LogisticRegression()
+    rfe = RFE(model, 3)
+    rfe = rfe.fit(x, y)
+    print rfe.support_
+    print rfe.ranking_
 
-    print lr.predict(x_test)
+    # LogisticRegression
+    model = LogisticRegression()
+    model.fit(x, y)
+    print model
+    expected = y
+    predicted = model.predict(x)
+    print metrics.classification_report(expected, predicted)
+    print metrics.confusion_matrix(expected, predicted)
 
+    #bayes
+    from sklearn.naive_bayes import GaussianNB
+    model = GaussianNB()
+    model.fit(x, y)
+    print model
+    expected = y
+    predicted = model.predict(x)
+    print metrics.classification_report(expected, predicted)
+    print metrics.confusion_matrix(expected, predicted)
+
+    #knn
+    from sklearn.neighbors import KNeighborsClassifier
+    model = KNeighborsClassifier()
+    model.fit(x, y)
+    print model
+    expected = y
+    predicted = model.predict(x)
+    print metrics.classification_report(expected, predicted)
+    print metrics.confusion_matrix(expected, predicted)
+
+    #tree
+    from sklearn.tree import DecisionTreeClassifier
+    model = DecisionTreeClassifier()
+    model.fit(x,y)
+    print model
+    expected = y
+    predicted = model.predict(x)
+    print metrics.classification_report(expected, predicted)
+    print metrics.confusion_matrix(expected, predicted)
 
 if __name__ == '__main__':
-    logistic_regression()
+    LogisticReg()
