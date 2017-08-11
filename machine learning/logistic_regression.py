@@ -15,9 +15,9 @@ from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
 
 def LogisticReg():
-    url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data'
-    raw_data = urllib.urlopen(url=url)
-    dataset = np.loadtxt(raw_data, delimiter=',')
+    #url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data'
+    #raw_data = urllib.urlopen(url=url)
+    dataset = np.loadtxt('D:\\opensource\\alg\\machine learning\\diabetes.data.1', delimiter=',')
     x = dataset[:,0:7]
     y = dataset[:,8]
     #标准化 归一化
@@ -76,6 +76,17 @@ def LogisticReg():
     predicted = model.predict(x)
     print metrics.classification_report(expected, predicted)
     print metrics.confusion_matrix(expected, predicted)
+
+    #svm
+    from sklearn.svm import SVC
+    model = SVC()
+    model.fit(x, y)
+    print model
+    expected = y
+    predicted = model.predict(x)
+    print metrics.classification_report(expected, predicted)
+    print metrics.confusion_matrix(expected, predicted)
+
 
 if __name__ == '__main__':
     LogisticReg()
