@@ -1,12 +1,12 @@
 常规的数据结构和算法 Data structures and algorithms:
-    astar(A*搜索):
-    集束搜索（又名定向搜索，Beam Search）:
-    二分查找（Binary Search）:
-    分支界定算法（Branch and Bound）:
-    Buchberger算法:
-    数据压缩:
-    Diffie-Hellman密钥交换算法:
-    Dijkstra算法:
+    astar(A*搜索):  
+    集束搜索（又名定向搜索，Beam Search）:  
+    二分查找（Binary Search）:  
+    分支界定算法（Branch and Bound）:  
+    Buchberger算法:  
+    数据压缩:  
+    Diffie-Hellman密钥交换算法:  
+    Dijkstra算法:  
     离散微分算法（Discrete differentiation）:
     动态规划算法（Dynamic Programming）:
         coin:min_coin.py done
