@@ -3,8 +3,8 @@
 """
 dp算法
 求数塔的最大路径
+重新创建一个数组保存
 """
-
 def digital_tower(n):
     dp = [[0 for clo in xrange(n+1)] for row in xrange(n+1)]
     for i in xrange(n, 0, -1):
@@ -14,6 +14,15 @@ def digital_tower(n):
             else:
                 dp[i][j] = arr[i][j] + max(dp[i+1][j+1], dp[i+1][j])
     return dp
+
+"""
+使用原始数据进行计算
+"""
+def digital_tower_src(n):
+    for i in xrange(n, 0, -1):
+        for j in xrange(i+1):
+            arr[i][j] += max(arr[i+1][j], arr[i+1][j+1])
+    return arr[1][1]
 
 """
 打印数塔的最大路径
@@ -44,7 +53,11 @@ if __name__ == '__main__':
     arr[3] = [0,10,6,8,0,0,0,0,0,0]
     arr[4] = [0,2,18,9,5,0,0,0,0,0]
 
-    res = digital_tower(4)
-    print res
-    print res[1][1]
-    print_max_path(res)
+    flag = 1
+    if flag:
+        res = digital_tower(4)
+        print res
+        print res[1][1]
+        print_max_path(res)
+    else:
+        print digital_tower_src(4)
