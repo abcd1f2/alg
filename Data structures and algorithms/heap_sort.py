@@ -58,19 +58,21 @@ class Heap():
             self._heap[i], self._heap[smallest] = self._heap[smallest], self._heap[i]
             self._bubbleDown(smallest)
 
+"""
+先是一个无序的数组，然后从非叶子节点开始进行调整，比较他的左右孩子，如果有比较大的替换为根节点，然后再向下比较替换了后的孩子节点， 等到完成到root节点后创建完成
+将顶点元素输出，一般将其和最后一个节点交换位置（注意这里堆的长度应该-1），因为别的非叶子节点仍然是满足要求的，所以只需要检查root节点是否满足要求，并进行相应的更新操作
 
-# 先是一个无序的数组，然后从非叶子节点开始进行调整，比较他的左右孩子，如果有比较大的替换为根节点，然后再向下比较替换了后的孩子节点， 等到完成到root节点后创建完成
-# 将顶点元素输出，一般将其和最后一个节点交换位置（注意这里堆的长度应该-1），因为别的非叶子节点仍然是满足要求的，所以只需要检查root节点是否满足要求，并进行相应的更新操作
+注：1、从最后一个非叶子节点开始比较和调整
 
-# 最大堆调整：将堆的末端子节点作调整，使得子节点永远小于父节点
-# start为当前需要调整最大堆的位置，end为调整边界
+最大堆调整：将堆的末端子节点作调整，使得子节点永远小于父节点
+start为当前需要调整最大堆的位置，end为调整边界
+"""
 def my_heap_adjust(data_list, begin, end):
-    root = begin
     while True:
-        child = root * 2 + 1
+        child = begin * 2 + 1
 
         # 调整节点的子节点
-        if child > end:
+        if child >= end:
             break
 
         # 取较大的子节点
@@ -78,9 +80,9 @@ def my_heap_adjust(data_list, begin, end):
             child += 1
 
         # 较大的子节点成为父节点
-        if data_list[root] < data_list[child]:
-            data_list[child], data_list[root] = data_list[root], data_list[child]
-            root = child
+        if data_list[begin] < data_list[child]:
+            data_list[child], data_list[begin] = data_list[begin], data_list[child]
+            begin = child
         else:
             break
 
@@ -103,4 +105,3 @@ def my_heap_sort(data_list):
 if __name__ == "__main__":
     data = [8, 1, 5, 2, 400, 32, 128, 64]
     print my_heap_sort(data)
-
