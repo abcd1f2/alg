@@ -10,14 +10,17 @@ public class AnsjStatisticFre {
     private Set<String> expectedNature = new HashSet<String>();
     private Map<String, Integer> word_freq = new HashMap<String, Integer>();
     private String result_file = new String();
+    private String matrixs_file = new String();
 
     public int GetFileSize() {
       return this.fileList.size();
     }
 
-    public int Init(String filePath, String res_file) {
+    public int Init(String filePath, String res_file, String matrixs) {
       //遍历文件夹
       this.result_file = res_file;
+      this.matrixs_file = matrixs;
+
       File dir = new File(filePath);
       File[] files = dir.listFiles(); // 该文件目录下文件全部放入数组
       if (files == null) {
@@ -28,7 +31,7 @@ public class AnsjStatisticFre {
       for (int i = 0; i < files.length; i++) {
         String fileName = files[i].getName();
         if (files[i].isDirectory()) { // 判断是文件还是文件夹
-          this.Init(files[i].getAbsolutePath(), this.result_file); // 获取文件绝对路径
+          this.Init(files[i].getAbsolutePath(), this.result_file, this.matrixs_file); // 获取文件绝对路径
         } else { // 判断是否是文件
           if (files[i] != null) {
             fileList.add(files[i]);
@@ -68,6 +71,7 @@ public class AnsjStatisticFre {
 
             System.out.println("start file " + this.fileList.get(i).getAbsolutePath());
             String temp_str = new String();
+            Map<String, Integer> temp_word_freq = new HashMap<String, Integer>();
             while ((temp_str = reader.readLine()) != null) {
               List<Term> terms = ToAnalysis.parse(temp_str).getTerms();
               for(int j=0; j<terms.size(); j++) {
@@ -79,10 +83,35 @@ public class AnsjStatisticFre {
                   else {
                     this.word_freq.put(terms.get(j).getName(), 1);
                   }
+
+                  if(temp_word_freq.containsKey(terms.get(j).getName()) != false) {
+                    temp_word_freq.put(terms.get(j).getName(), temp_word_freq.get(terms.get(j).getName())+1);
+                  }
+                  else {
+                    temp_word_freq.put(terms.get(j).getName(),1);
+                  }
                 }
               }
             }
 
+            try {
+              String new_file = this.fileList.get(i).getName() + ".ansjwords";
+              new_file = this.fileList.get(i).getParent() + "/" + new_file;
+              FileWriter tmp_fw = new FileWriter(new_file) ;
+              BufferedWriter tmp_writer = new BufferedWriter(tmp_fw);
+              for (Map.Entry<String, Integer> entry : temp_word_freq.entrySet()) {
+                String key = entry.getKey().toString();
+                int value = entry.getValue();
+                tmp_writer.write(key + " " + value);
+                tmp_writer.newLine();
+                tmp_writer.flush();
+              }
+              tmp_fw.close();
+              tmp_writer.close();
+            }
+            catch (Exception te) {
+              System.out.println("write error" + te.getMessage());
+            }
             if (fr != null && reader != null) {
               fr.close();
               reader.close();
@@ -123,17 +152,65 @@ public class AnsjStatisticFre {
         }
       }
 
+    public void transform_matrix() {
+      try {
+        FileWriter fw = new FileWriter(this.matrixs_file);
+        BufferedWriter writer = new BufferedWriter(fw);
+
+        for (int i = 0; i < this.fileList.size(); i++) {
+          Map<String, Integer> temp_word_freq = new HashMap<String, Integer>();
+          String new_file = this.fileList.get(i).getParent() + "/" + this.fileList.get(i).getName() + ".ansjwords";
+          FileReader fr = new FileReader(new_file);
+          BufferedReader reader = new BufferedReader(fr);
+          String temp_str = new String();
+          while ((temp_str = reader.readLine()) != null) {
+            String[] retvals = temp_str.split(" ");
+            if (retvals.length == 2) {
+              temp_word_freq.put(retvals[0], Integer.parseInt(retvals[1]));
+            }
+          }
+          List<Integer> matrixs = new ArrayList<Integer>();
+          for (Map.Entry<String, Integer> entry : this.word_freq.entrySet()) {
+            if (temp_word_freq.containsKey(entry.getKey().toString()) != false) {
+              matrixs.add(entry.getValue());
+            }
+            else {
+              matrixs.add(0);
+            }
+          }
+
+          String results_data = new String();
+          results_data = this.fileList.get(i).getName() + " ";
+          for(Integer data : matrixs) {
+            results_data += data;
+            results_data += ",";
+          }
+
+          writer.write(results_data);
+          writer.newLine();
+          writer.flush();
+        }
+        fw.close();
+        writer.close();
+      }
+      catch (Exception matrix_e) {
+        System.out.println("matrix error " + matrix_e.getMessage());
+      }
+    }
+
     public static void main(String[] args) {
         AnsjStatisticFre fa = new AnsjStatisticFre();
-        String file_path = "./";
+        String file_path = "./data";
         String conf_file = "";
         String result_file = "result.data";
-        if (fa.Init(file_path, result_file) < 1) {
+        String matrix_file = "matrixs.data";
+        if (fa.Init(file_path, result_file, matrix_file) < 1) {
           System.out.println("init error " + file_path);
         }
         else {
           System.out.println("file list len " + fa.GetFileSize());
         }
         fa.start();
+        fa.transform_matrix();
     }
 }
