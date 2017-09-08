@@ -62,6 +62,7 @@ public class AnsjSplit {
       this.expectedNature.add("wp");
       this.expectedNature.add("wb");
       this.expectedNature.add("wh");
+      this.expectedNature.add("null");
       return 1;
     }
 
@@ -70,6 +71,7 @@ public class AnsjSplit {
         for (int i = 0; i < this.fileList.size(); i++) {
           BufferedReader reader = null;
           FileReader fr = null;
+          this.splitWordList.clear();
           try {
             fr = new FileReader(this.fileList.get(i).getAbsolutePath());
             reader = new BufferedReader(fr);
@@ -79,8 +81,10 @@ public class AnsjSplit {
             while ((temp_str = reader.readLine()) != null) {
               List<Term> terms = ToAnalysis.parse(temp_str).getTerms();
               for(int j=0; j<terms.size(); j++) {
-                if (!this.expectedNature.contains(terms.get(j).getNatureStr())) {
+                String naturestr = terms.get(j).getNatureStr();
+                if (naturestr != null && naturestr.length() > 0 && !this.expectedNature.contains(terms.get(j).getNatureStr())) {
                   this.splitWordList.add(terms.get(j).getName());
+                  //System.out.println(terms.get(j).getName()+":"+naturestr);
                 }
               }
             }
