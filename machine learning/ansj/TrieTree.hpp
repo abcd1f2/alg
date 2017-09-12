@@ -19,9 +19,9 @@ public:
       std::map<char, Node*>::iterator mapIte = proot->GetChildrens().find(str[index]);
       if (mapIte != proot->GetChildrens().end()) {
         if(index == str.size() - 1) {
-          Node *node = mapIte->second();
+          Node *node = mapIte->second;
           node->SetFre(node->GetFre() + 1);
-          node->SetEnd(true);
+          node->SetIsEnd(true);
         }
       }
       else {
@@ -33,16 +33,16 @@ public:
         else {
           node->SetFre(0);
         }
-        proot->GetChildrens().insert(make_pair(str[index], node));;
+        proot->GetChildrens().insert(std::pair<char,Node*>(str[index], node));;
       }
 
-      proot = proot->GetChildrens().find(str[index]);
+      proot = proot->GetChildrens().find(str[index])->second;
     }
   }
 
   int SearchFre(const std::string& str) {
     int fre = -1;
-    Node *node = proot;
+    Node *node = root_p_;
     for (int index = 0; index < str.size(); index++) {
       std::map<char, Node*>::iterator mapIte = node->GetChildrens().find(str[index]);
       if(mapIte != node->GetChildrens().end()) {
@@ -61,7 +61,7 @@ private:
   class Node
   {
   public:
-    Node(const std::string& str) {
+    Node(const std::string& str=std::string()) {
       contents_ = str;
       fre_ = -1;
       root_ = false;
