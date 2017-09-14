@@ -1,6 +1,56 @@
 #include <map>
 #include <string>
 
+class Node
+{
+public:
+  Node(const std::string& str=std::string()) {
+    contents_ = str;
+    fre_ = -1;
+    root_ = false;
+    end_ = false;
+  }
+  ~Node();
+public:
+  std::string GetContent() const {
+    return contents_;
+  }
+  void SetContent(const std::string& str) {
+    contents_ = str;
+  }
+  int GetFre() const {
+    return fre_;
+  }
+  void SetFre(int f) {
+    fre_ = f;
+  }
+  bool IsEnd() const {
+    return end_;
+  }
+  void SetIsEnd(bool flag) {
+    end_ = flag;
+  }
+  bool IsRoot() {
+    return root_;
+  }
+  void SetRoot(bool flag) {
+    root_ = flag;
+  }
+  std::map<char, Node*>& GetChildrens() {
+    return childrens_;
+  }
+  void SetChildrens(const std::map<char, Node*>& childs) {
+    childrens_ = childs;
+  }
+private:
+  char c_;
+  std::string contents_;
+  int fre_;
+  bool end_;
+  bool root_;
+  std::map<char, Node*> childrens_;
+};
+
 class TireTree
 {
 public:
@@ -26,6 +76,7 @@ public:
       }
       else {
         Node *node = new Node();
+        count_++;
         if (index == str.size()-1) {
           node->SetFre(1);
           node->SetIsEnd(true);
@@ -33,7 +84,7 @@ public:
         else {
           node->SetFre(0);
         }
-        proot->GetChildrens().insert(std::pair<char,Node*>(str[index], node));;
+        proot->GetChildrens().insert(std::pair<char,Node*>(str[index], node));
       }
 
       proot = proot->GetChildrens().find(str[index])->second;
@@ -57,56 +108,15 @@ public:
     return fre;
   }
 
-private:
-  class Node
-  {
-  public:
-    Node(const std::string& str=std::string()) {
-      contents_ = str;
-      fre_ = -1;
-      root_ = false;
-      end_ = false;
-    }
-    ~Node();
-  public:
-    std::string GetContent() const {
-      return contents_;
-    }
-    void SetContent(const std::string& str) {
-      contents_ = str;
-    }
-    int GetFre() const {
-      return fre_;
-    }
-    void SetFre(int f) {
-      fre_ = f;
-    }
-    bool IsEnd() const {
-      return end_;
-    }
-    void SetIsEnd(bool flag) {
-      end_ = flag;
-    }
-    bool IsRoot() {
-      return root_;
-    }
-    void SetRoot(bool flag) {
-      root_ = flag;
-    }
-    std::map<char, Node*>& GetChildrens() {
-      return childrens_;
-    }
-    void SetChildrens(const std::map<char, Node*>& childs) {
-      childrens_ = childs;
-    }
-  private:
-    char c_;
-    std::string contents_;
-    int fre_;
-    bool end_;
-    bool root_;
-    std::map<char, Node*> childrens_;
-  };
+  Node* GetRootNode() const {
+    return root_p_;
+  }
+
+  int GetSize() const {
+    return count_;
+  }
+
 private:
   Node *root_p_;
+  int count_;
 };
