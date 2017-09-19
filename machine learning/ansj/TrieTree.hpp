@@ -51,16 +51,16 @@ private:
   std::map<char, Node*> childrens_;
 };
 
-class TireTree
+class TrieTree
 {
 public:
-  TireTree(){
+  TrieTree(){
     root_p_ = new Node("root");
     root_p_->SetRoot(true);
     root_p_->SetFre(0);
     root_p_->SetIsEnd(false);
   }
-  ~TireTree();
+  ~TrieTree();
 
 public:
   void Insert(const std::string& str){
