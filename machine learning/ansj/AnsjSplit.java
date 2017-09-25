@@ -79,6 +79,7 @@ public class AnsjSplit {
             System.out.println("start file " + this.fileList.get(i).getAbsolutePath());
             String temp_str = new String();
             while ((temp_str = reader.readLine()) != null) {
+              temp_str = temp_str.trim();
               List<Term> terms = ToAnalysis.parse(temp_str).getTerms();
               for(int j=0; j<terms.size(); j++) {
                 String naturestr = terms.get(j).getNatureStr();
