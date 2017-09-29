@@ -26,15 +26,33 @@ class ModelHandler(object):
                         continue
                     result = re.split(" |\t", line)
                     if len(result) == 3:
-                        self.unigram[result[1]] = result[0]
+                        self.unigram[result[1].strip()] = result[0].strip()
                 elif flag == 2:
                     if line.endswith("3-grams:"):
                         flag = 3
                         continue
                     result = re.split(" |\t", line)
                     if len(result) == 4:
-                        self.bigram[result[1]] = {result[2]:result[0]}
+                        self.bigram[result[1].strip()] = {result[2].strip():result[0].strip()}
                 elif flag == 3:
                     result = re.split(" |\t", line)
                     if len(result) == 4:
-                        self.trigram[result[1]] = {result[2]:{result[3]:result[0]}}
+                        self.trigram[result[1].strip()] = {result[2].strip():{result[3].strip():result[0].strip()}}
+
+    def GetChineseProb(self, first, second):
+        if self.unigram.has_key(first+second):
+            return self.unigram[first+second]
+        if self.bigram.has_key(first):
+            if self.bigram[first].has_key(second):
+                return self.bigram[first][second]
+            else:
+                return None
+        else:
+            return None
+
+if __name__ == '__main__':
+    model = ModelHandler('text.train')
+    model.Init()
+    import os
+    print os.getcwd()
+    print model.GetChineseProb('好','玩')

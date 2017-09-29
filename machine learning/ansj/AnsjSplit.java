@@ -84,7 +84,7 @@ public class AnsjSplit {
               for(int j=0; j<terms.size(); j++) {
                 String naturestr = terms.get(j).getNatureStr();
                 if (naturestr != null && naturestr.length() > 0 && !this.expectedNature.contains(terms.get(j).getNatureStr())) {
-                  this.splitWordList.add(terms.get(j).getName());
+                  this.splitWordList.add(terms.get(j).getName().trim());
                   //System.out.println(terms.get(j).getName()+":"+naturestr);
                 }
               }
