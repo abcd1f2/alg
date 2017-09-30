@@ -95,12 +95,14 @@ if __name__ == '__main__':
                         y0 = indey
                     y1 = (i - (t - tmp))%tmp
                     break
-
+            if y0 - x0 > 1 or y0 == x0:
+                continue
             if x1 < len(r[x0]) and y1 < len(r[y0]):
                 print j,i,x0,x1,y0,y1,r[x0][x1], r[y0][y1]
     import sys
     sys.exit(0)
     """
+
     inf=-999999999.00
     input = Input("text.train", "syllable.bdt", "lexicon.bdt")
     res = input.GetChineseFromPinyin('zhendebuhaowan')
@@ -119,6 +121,7 @@ if __name__ == '__main__':
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
     """
+
     c = sum(len(i) for i in res)
     d = [[0 for row in xrange(c)] for colu in xrange(c)]
     dist = [0 for i in xrange(c)]
@@ -134,9 +137,9 @@ if __name__ == '__main__':
             t = 0
             index = 0
             indey = 0
-            for x in res:
-                tmp = len(x)
-                t += len(x)
+            for x in xrange(len(res)):
+                tmp = len(res[x])
+                t += tmp
                 index += 1
                 if t >= j:
                     x0 = index-1
@@ -148,21 +151,24 @@ if __name__ == '__main__':
             t = 0
             index = 0
             indey = 0
-            for x in res:
-                tmp = len(x)
-                t += len(x)
+            for x in xrange(len(res)):
+                tmp = len(res[x])
+                t += tmp
                 indey += 1
                 if t >= i:
                     y0 = indey-1
                     if i >= t:
-                        y0 = index
+                        y0 = indey
                     y1 = (i - (t - tmp))%tmp
                     break
-
+            if y0 - x0 > 1 or y0 == x0:
+                continue
             if x1 < len(res[x0]) and y1 < len(res[y0]):
                 prob = input.GetProba(res[x0][x1], res[y0][y1])
+                #with open("aaaaa.log", "ab") as f:
+                #    f.write("{} {} {} {} {} {} {}{}\n".format(j,i,x0,x1,y0,y1,res[x0][x1], res[y0][y1]));
                 if prob:
-                    print j,i,x0,x1,y0,y1,prob,res[x0][x1],res[y0][y1]
+                    print j,i,x0,x1,y0,y1,prob,res[x0][x1],res[y0][y1],dist[j],min_va
                     if dist[j] + float(prob) > min_va:
                         min_va = dist[j] + float(prob)
                         tmp_list = res[x0][x1] + res[y0][y1]
@@ -174,9 +180,25 @@ if __name__ == '__main__':
         if min_va != inf:
             dist[i] = min_va
             l.append(tmp_list)
+            print "tmp_list=", tmp_list,min_va
     print "dist=", dist
     for k in l:
         print k,
+
+    #cal path##########
+    j = len(res) - 1
+    st = [j]
+    flag = True
+    while j > 0 and flag:
+        flag = False
+        for i in xrange(j):
+            if res[i][j] > 0:
+                if dist[j] = dist[i] + res[i][j]:
+                    st.append(i)
+                    flag = True
+        j = st[len(st)-1]
+    print st
+    ###################
 
     """
     d = {}

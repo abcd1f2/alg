@@ -45,10 +45,7 @@ class ModelHandler(object):
         if self.bigram.has_key(first):
             if self.bigram[first].has_key(second):
                 return self.bigram[first][second]
-            else:
-                return None
-        else:
-            return None
+        return None
 
 if __name__ == '__main__':
     model = ModelHandler('text.train')

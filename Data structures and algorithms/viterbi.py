@@ -6,13 +6,24 @@
 将同一列定位一个点
 """
 def viterbi():
-    for i in xrange(1,10):
+    for i in xrange(1,len(data)):
         k = x
         for j in xrange(i):
             if data[j][i] < x and dist[j] + data[j][i] < k:
                 k = dist[j] + data[j][i]
-                print j,i,dist[j]
         dist[i] = k
+
+def showpath():
+    j = len(data) - 1
+    st = [j,]
+    while j > 0:
+        for i in xrange(j):
+            if data[i][j] > 0:
+                if dist[j] - data[i][j] == dist[i]:
+                    st.append(i)
+                    print i,st
+        j = st[len(st)-1]
+    print st
 
 def ViterbiCompute(obs, states, start_p, trans_p, emit_p):
     """
@@ -80,6 +91,7 @@ def ViterbiComputePy(obs, states, start_p, trans_p, emit_p):
     return prob,path[state]
 
 if __name__ == '__main__':
+    """
     s = [0,1]
     o = [0,1,2]
     s_p = [0.6,0.4]
@@ -90,6 +102,7 @@ if __name__ == '__main__':
 
     import sys
     sys.exit(0)
+    """
     x = 99999999
     data = [[x,4,2,3,x,x,x,x,x,x],
             [x,x,x,x,10,9,x,x,x,x],
@@ -101,6 +114,7 @@ if __name__ == '__main__':
             [x,x,x,x,x,x,x,x,x,8],
             [x,x,x,x,x,x,x,x,x,4],
             [x,x,x,x,x,x,x,x,x,x]]
-    dist = [0 for i in xrange(10)]
+    dist = [0 for i in xrange(len(data))]
     viterbi()
     print dist
+    showpath()
