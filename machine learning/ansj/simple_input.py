@@ -136,7 +136,6 @@ if __name__ == '__main__':
             y1 = 0
             t = 0
             index = 0
-            indey = 0
             for x in xrange(len(res)):
                 tmp = len(res[x])
                 t += tmp
@@ -149,7 +148,6 @@ if __name__ == '__main__':
                     break
 
             t = 0
-            index = 0
             indey = 0
             for x in xrange(len(res)):
                 tmp = len(res[x])
