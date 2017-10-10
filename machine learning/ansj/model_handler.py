@@ -40,6 +40,13 @@ class ModelHandler(object):
                         self.trigram[result[1].strip()] = {result[2].strip():{result[3].strip():result[0].strip()}}
 
     def GetChineseProb(self, first, second):
+        """
+        计算两个字的概率 字phrase1和字phrase2
+        1、如果在二元模型中有词的概率，直接使用概率
+        2、如果没有词的概率，则需要使用平滑计算
+            delta可以从phrase1->unknown或者从unknown->phrase2获取的概率
+            GetUnigram(phrase1) * GetUnigram(phrase2) * (Math.E + delta)
+        """
         if self.unigram.has_key(first+second):
             return self.unigram[first+second]
         if self.bigram.has_key(first):
