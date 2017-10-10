@@ -191,7 +191,8 @@ if __name__ == '__main__':
         flag = False
         for i in xrange(j):
             if res[i][j] > 0:
-                if dist[j] = dist[i] + res[i][j]:
+                #res[i][j] 需要转换为概率 input.GetProba(res[x0][x1], res[y0][y1]) !!!!
+                if dist[j] == dist[i] + res[i][j]:
                     st.append(i)
                     flag = True
         j = st[len(st)-1]
