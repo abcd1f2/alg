@@ -10,9 +10,10 @@ class KeyNode(object):
         self.next_ = n
 
 class DocNode(object):
-    def __init__(self,dname=None,n=None):
+    def __init__(self,dname=None,c=None,n=None):
         self.doc_name_ = dname
         self.next_ = n
+        self.word_freq_ = c
 
 class Search(object):
     def __init__(self,dir_path=None):
@@ -33,12 +34,12 @@ class Search(object):
         filelists = os.listdir(self.dir_path_)
         for f in filelists:
             if f.endswith('.ansjwords'):
-                with open(f, 'rb') as fd:
+                with open(os.path.join(self.dir_path_, f), 'rb') as fd:
                     for line in fd.xreadlines():
-                        lines = line.split()
-                        findindex = f.find('.')
-                        if findindex != -1:
-                            f = f[0:findindex]
+                        lineitems = line.split()
+                        if len(lineitems) > 1:
+                            dnode = DocNode(f,lineitems[1])
+                            self.InsertStr(lineitems[0], dnode)
 
     def PrepareCryptTable(self):
         seed = 0x00100001
@@ -110,18 +111,16 @@ class Search(object):
             return self.keys_array_[hash_start]
         return None
 
-    def InsertStr(self, input_str, doc_name):
+    def InsertStr(self, input_str, doc_node):
         node = self.SearchStr(input_str)
         if node:
-            dnode = DocNode(doc_name)
             node.count_ += 1
-            dnode.next_ = node.next_
-            node.next_ = dnode
+            doc_node.next_ = node.next_
+            node.next_ = doc_node
         else:
             p = self.InternalInsertStr(input_str)
             node = self.keys_array_[p]
-            dnode = DocNode(doc_name)
-            node.next_ = dnode
+            node.next_ = doc_node
 
     def ShowSearchStr(self, input_str):
         node = self.SearchStr(input_str)
@@ -132,12 +131,7 @@ class Search(object):
                 dnode = dnode.next_
 
 if __name__ == '__main__':
-    s = Search()
+    s = Search(os.path.dirname(os.path.abspath(__file__)))
     s.PrepareCryptTable()
-    s.InsertStr('好吗','1.txt')
-    s.InsertStr('a','2.txt')
-    s.InsertStr('a','3.txt')
-    s.InsertStr('b','1.txt')
-    s.InsertStr('b','2.txt')
-    s.InsertStr('c','1.txt')
-    s.ShowSearchStr('好吗')
+    s.Init()
+    s.ShowSearchStr("香港回归")
