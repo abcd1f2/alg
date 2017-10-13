@@ -15,6 +15,12 @@ class DocNode(object):
         self.next_ = n
         self.word_freq_ = c
 
+class HashNode(object):
+    def __init__(self,hash_v=None,hash_a=None,hash_b=None):
+        self.hash_value_ = hash_v
+        self.hash_value_a_ = hash_a
+        self.hash_value_b_ = hash_b
+
 class Search(object):
     def __init__(self,dir_path=None):
         self.dir_path_ = dir_path
@@ -29,6 +35,15 @@ class Search(object):
         self.hash_tablea_ = [0 for i in xrange(self.hash_table_size_)]
         self.hash_tableb_ = [0 for i in xrange(self.hash_table_size_)]
         self.keys_array_ = [0 for i in xrange(self.hash_table_size_)]
+
+    def CalcHashValues(self,input_str):
+        hash_offset = 0
+        hash_type_a = 1
+        hash_type_b = 2
+        hash_value = self.HashString(input_str, hash_offset)
+        hash_value_a = self.HashString(input_str, hash_type_a)
+        hash_value_b = self.HashString(input_str, hash_type_b)
+        return HashNode(hash_value, hash_value_a, hash_value_b)
 
     def Init(self):
         filelists = os.listdir(self.dir_path_)
@@ -63,14 +78,8 @@ class Search(object):
             seed2 = ord(i) + seed1 + seed2 + (seed2<<5) + 3
         return seed1
 
-    def InternalInsertStr(self, input_str):
-        hash_offset = 0
-        hash_a = 1
-        hash_b = 2
-        hash_value = self.HashString(input_str, hash_offset)
-        hash_value_a = self.HashString(input_str, hash_a)
-        hash_value_b = self.HashString(input_str, hash_b)
-        hash_start = hash_value % self.hash_table_size_
+    def InternalInsertStr(self, input_str, hash_values_node):
+        hash_start = hash_values_node.hash_value_ % self.hash_table_size_
         hash_pos = hash_start
 
         while self.hash_table_[hash_start]:
@@ -79,8 +88,8 @@ class Search(object):
                 break
 
         if not self.hash_table_[hash_start]:
-            self.hash_tablea_[hash_start] = hash_value_a
-            self.hash_tableb_[hash_start] = hash_value_b
+            self.hash_tablea_[hash_start] = hash_values_node.hash_value_a_
+            self.hash_tableb_[hash_start] = hash_values_node.hash_value_b_
             node = KeyNode(k=input_str,c=1,p=hash_start)
             self.keys_array_[hash_start] = node
             return hash_start
@@ -91,18 +100,12 @@ class Search(object):
             print "error"
         return None
 
-    def SearchStr(self, input_str):
-        hash_offset = 0
-        hash_a = 1
-        hash_b = 2
-        hash_value = self.HashString(input_str, hash_offset)
-        hash_value_a = self.HashString(input_str, hash_a)
-        hash_value_b = self.HashString(input_str, hash_b)
-        hash_start = hash_value % self.hash_table_size_
+    def SearchStr(self, input_str, hash_values_node):
+        hash_start = hash_values_node.hash_value_ % self.hash_table_size_
         hash_pos = hash_start
 
         while self.hash_table_[hash_start]:
-            if self.hash_tablea_[hash_start] == hash_value_a and self.hash_tableb_[hash_start] == hash_value_b:
+            if self.hash_tablea_[hash_start] == hash_values_node.hash_value_a_ and self.hash_tableb_[hash_start] == hash_values_node.hash_value_b_:
                 break
             hash_start = (hash_start + 1) % self.hash_table_size_
             if hash_start == hash_pos:
@@ -112,26 +115,28 @@ class Search(object):
         return None
 
     def InsertStr(self, input_str, doc_node):
-        node = self.SearchStr(input_str)
+        hash_node = self.CalcHashValues(input_str)
+        node = self.SearchStr(input_str, hash_node)
         if node:
             node.count_ += 1
             doc_node.next_ = node.next_
             node.next_ = doc_node
         else:
-            p = self.InternalInsertStr(input_str)
+            p = self.InternalInsertStr(input_str, hash_node)
             node = self.keys_array_[p]
             node.next_ = doc_node
 
     def ShowSearchStr(self, input_str):
-        node = self.SearchStr(input_str)
+        hash_node = self.CalcHashValues(input_str)
+        node = self.SearchStr(input_str, hash_node)
         if node and node.next_:
             dnode = node.next_
             while dnode:
-                print dnode.doc_name_
+                print dnode.doc_name_, dnode.word_freq_
                 dnode = dnode.next_
 
 if __name__ == '__main__':
     s = Search(os.path.dirname(os.path.abspath(__file__)))
     s.PrepareCryptTable()
     s.Init()
-    s.ShowSearchStr("香港回归")
+    s.ShowSearchStr("实验室")

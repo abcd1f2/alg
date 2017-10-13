@@ -80,6 +80,7 @@ import java.io.*;
              List<Term> terms = ToAnalysis.parse(temp_str).getTerms();
              for(int j=0; j<terms.size(); j++) {
                if(this.expectedNature.contains(terms.get(j).getNatureStr())) {
+               //if (True) {
                  if (this.word_freq.containsKey(terms.get(j).getName()) != false) {
                    int count = this.word_freq.get(terms.get(j).getName()) + 1;
                    this.word_freq.put(terms.get(j).getName(), count);
