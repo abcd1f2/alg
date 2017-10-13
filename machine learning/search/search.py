@@ -110,7 +110,7 @@ class Search(object):
             hash_start = (hash_start + 1) % self.hash_table_size_
             if hash_start == hash_pos:
                 break
-        if self.keys_array_[hash_start] and self.keys_array_[hash_start].key_:
+        if self.keys_array_[hash_start] and self.keys_array_[hash_start].key_ == input_str:
             return self.keys_array_[hash_start]
         return None
 
