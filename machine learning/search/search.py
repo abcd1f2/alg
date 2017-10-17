@@ -1,5 +1,10 @@
 #coding=utf-8
 
+"""
+搜索引擎的简单版本
+使用暴雪的hash算法改造
+"""
+
 import os
 
 class KeyNode(object):
